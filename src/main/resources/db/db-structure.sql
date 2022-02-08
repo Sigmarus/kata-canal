@@ -2,6 +2,7 @@
 -- This is the mysql data structure of https://www.imdb.com/interfaces/ as of 07/02/2022 (little-endian date format).
 --
 
+DROP TABLE IF EXISTS principals_characters;
 DROP TABLE IF EXISTS principals;
 DROP TABLE IF EXISTS characters;
 DROP TABLE IF EXISTS episodes;
@@ -37,8 +38,8 @@ CREATE TABLE title_akas_types (
     title_id        varchar(9)      NOT NULL,
     type_id         integer         NOT NULL,
     PRIMARY KEY (title_id, type_id),
-    CONSTRAINT fk-title_akas_types_title_akas FOREIGN KEY (title_id) REFERENCES title_akas (title_id),
-    CONSTRAINT fk-title_akas_types_title_types FOREIGN KEY (type_id) REFERENCES title_types (type_id)
+    CONSTRAINT fk-title_akas_types-title_akas FOREIGN KEY (title_id) REFERENCES title_akas (title_id),
+    CONSTRAINT fk-title_akas_types-title_types FOREIGN KEY (type_id) REFERENCES title_types (type_id)
 )
 
 CREATE TABLE titles (
@@ -65,8 +66,8 @@ CREATE TABLE titles_genres (
     title_id        varchar(9)      NOT NULL,
     genre_id        integer         NOT NULL,
     PRIMARY KEY (title_id, genre_id),
-    CONSTRAINT fk-titles_genres_title_types FOREIGN KEY (type_id) REFERENCES title_types (type_id),
-    CONSTRAINT fk-titles_genres_genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
+    CONSTRAINT fk-titles_genres-title_types FOREIGN KEY (type_id) REFERENCES title_types (type_id),
+    CONSTRAINT fk-titles_genres-genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
 )
 
 CREATE TABLE persons (
@@ -82,8 +83,8 @@ CREATE TABLE known_for (
     nconst          varchar(9)      NOT NULL,
     tconst          varchar(9)      NOT NUll, --titles the person is known for
     PRIMARY KEY (nconst, tconst),
-    CONSTRAINT fk-known_for_persons FOREIGN KEY (nconst) REFERENCES persons (nconst),
-    CONSTRAINT fk-known_for_titles FOREIGN KEY (tconst) REFERENCES titles (tconst)
+    CONSTRAINT fk-known_for-persons FOREIGN KEY (nconst) REFERENCES persons (nconst),
+    CONSTRAINT fk-known_for-titles FOREIGN KEY (tconst) REFERENCES titles (tconst)
 )
 
 CREATE TABLE title_crew (
@@ -91,8 +92,8 @@ CREATE TABLE title_crew (
     nconst          varchar(9)      NOT NULL, --(string) alphanumeric unique identifier of the person
     type            varchar(20)     NOT NULL, --enumerated role of the person's regarding the title. One of the following: "director", "writer"
     PRIMARY KEY (tconst, nconst),
-    CONSTRAINT fk-title_crew_titles FOREIGN KEY (tconst) REFERENCES titles (tconst),
-    CONSTRAINT fk-title_crew_persons FOREIGN KEY (nconst) REFERENCES persons (nconst),
+    CONSTRAINT fk-title_crew-titles FOREIGN KEY (tconst) REFERENCES titles (tconst),
+    CONSTRAINT fk-title_crew-persons FOREIGN KEY (nconst) REFERENCES persons (nconst),
     CONSTRAINT (type) CHECK (type in ("director", "writer"))
 )
 
@@ -100,19 +101,21 @@ CREATE TABLE episodes (
     tconst          varchar(20)     NOT NULL, --alphanumeric identifier of episode
     parent_tconst   varchar(20)     NOT NULL, --alphanumeric identifier of the parent TV Series
     season_number   integer,            --season number the episodes belongs to
-    episode_number integer,             --episode number of the title in the TV series
+    episode_number  integer,            --episode number of the title in the TV series
     PRIMARY KEY (tconst),
-    CONSTRAINT fk-titles FOREIGN KEY (parent_tconst) REFERENCES titles (tconst)
+    CONSTRAINT fk-episodes-titles FOREIGN KEY (parent_tconst) REFERENCES titles (tconst)
 )
 
 CREATE TABLE principals (
+    principal_id integer        NOT NUll AUTO_INCREMENT,
     tconst      varchar(9)      NOT NULL, --alphanumeric unique identifier of the title
     ordering    integer         NOT NULL, --a number to uniquely identify rows for a given title_id
     nconst      varchar(9)      NOT NULL, --alphanumeric unique identifier of the name/person
     category    varchar(50)     NOT NULL, --the category of job that person was in
     job         varchar(50),        --the specific job title if applicable, else NULL
-    PRIMARY KEY (tconst),
-    CONSTRAINT fk-titles_genres_title_types FOREIGN KEY (type_id) REFERENCES title_types (type_id)
+    PRIMARY KEY (principal_id),
+    CONSTRAINT fk-principals-titles FOREIGN KEY (tconst) REFERENCES titles (tconst),
+    CONSTRAINT fk-principals-persons FOREIGN KEY (nconst) REFERENCES persons (nconst)
 )
 
 CREATE TABLE characters (
@@ -124,7 +127,9 @@ CREATE TABLE characters (
 CREATE TABLE principals_characters (
     principal_id    varchar(9)  NOT NUll,
     character_id    integer     NOT NULL,
-    PRIMARY KEY (principal_id, character_id)
+    PRIMARY KEY (principal_id, character_id),
+    CONSTRAINT fk-principals_characters-principals FOREIGN KEY (principal_id) REFERENCES principals (principal_id),
+    CONSTRAINT fk-principals_characters-characters FOREIGN KEY (character_id) REFERENCES characters (character_id)
 )
 
 

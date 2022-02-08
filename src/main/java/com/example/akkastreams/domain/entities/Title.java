@@ -24,16 +24,16 @@ public class Title {
     String originalTitle;
 
     @Column(name = "is_adult")
-    boolean isAdult = false;
+    Boolean isAdult = false;
 
     @Column(name = "start_year")
-    int startYear;
+    Integer startYear;
 
     @Column(name = "end_year")
     Integer endYear;
 
     @Column(name = "runtime_minutes")
-    int runtimeMinutes;
+    Integer runtimeMinutes;
 
     @Column(name = "average_ratings")
     Integer averageRatings;
@@ -46,6 +46,9 @@ public class Title {
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
     List<Crew> crew;
+
+    @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
+    List<Principal> principals;
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
     List<Episode> episodes;

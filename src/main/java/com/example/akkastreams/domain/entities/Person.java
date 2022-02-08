@@ -15,10 +15,10 @@ public class Person {
     String primaryName;
 
     @Column(name = "birth_year")
-    int birthYear;
+    Integer birthYear;
 
     @Column(name = "death_year")
-    int deathYear;
+    Integer deathYear;
 
     @Column(name = "primary_profession")
     String primaryProfessions;
@@ -28,4 +28,7 @@ public class Person {
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     List<Crew> crewIn;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    List<Principal> principalIn;
 }
