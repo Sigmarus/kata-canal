@@ -24,9 +24,6 @@ public class Person {
     String primaryProfessions;
 
     @ManyToMany(mappedBy = "cast", fetch = FetchType.LAZY)
-    @JoinTable(name = "known_for",
-        joinColumns = @JoinColumn(name = "nconst"),
-        inverseJoinColumns = @JoinColumn(name = "tconst"))
     List<Title> knownFor;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)

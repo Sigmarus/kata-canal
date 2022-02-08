@@ -16,7 +16,7 @@ public class ImdbService {
     @Autowired
     private TitleRepository titleRepository;
 
-    public List<Person> findAllCrewForTitleName(String titleName) {
+    public List<Person> findAllTitleCrewForTitleName(String titleName) {
         Optional<Title> title = titleRepository.findByOriginalTitle(titleName);
         return title.map(Title::getCrew).orElse(Collections.EMPTY_LIST);
     }

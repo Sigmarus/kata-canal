@@ -41,7 +41,7 @@ public class Title {
     @Column(name = "num_votes")
     Integer numVotes;
 
-    @ManyToMany(mappedBy = "knownFor", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     List<Person> cast;
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)

@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class Application {
 
+	// Start with maven task spring-boot:run
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-
 }

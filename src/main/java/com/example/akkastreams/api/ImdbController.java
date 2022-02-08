@@ -18,7 +18,7 @@ public class ImdbController {
 
     @GetMapping("/titles/{titleName}/people")
     public List<Person> getTitleRelatedPersons(@PathVariable String titleName) {
-        return imdbService.findAllCrewForTitleName(titleName);
+        return imdbService.findAllTitleCrewForTitleName(titleName);
     }
 
     @GetMapping("/top10-longest-tvseries")
