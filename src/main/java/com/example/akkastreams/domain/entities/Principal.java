@@ -16,12 +16,12 @@ public class Principal {
     @EmbeddedId
     private PrincipalKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("titleId")
     @JoinColumn(name = "tconst")
     private Title title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("personId")
     @JoinColumn(name = "nconst")
     private Person person;

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -94,12 +95,68 @@ public class ImdbServiceTest {
         //TODO Not yet implemented
     }
 
+
+    private Map<Title, List<Episode>> getEpisodes() {
+        List<Title> tvSeries = getTvSeries();
+        return Map.of(
+                tvSeries.get(0),
+                List.of(
+                        new Episode("tt4200001", tvSeries.get(0), 1, 1)
+                ),
+                tvSeries.get(1),
+                List.of(
+                        new Episode("tt4200011", tvSeries.get(1), 1, 1),
+                        new Episode("tt4200012", tvSeries.get(1), 1, 2)
+                ),
+                tvSeries.get(2),
+                List.of(
+                        new Episode("tt4200021", tvSeries.get(2), 1, 1),
+                        new Episode("tt4200022", tvSeries.get(2), 1, 2),
+                        new Episode("tt4200023", tvSeries.get(2), 1, 3)
+                ),
+                tvSeries.get(3),
+                List.of(
+                        new Episode("tt4200031", tvSeries.get(3), 1, 1),
+                        new Episode("tt4200032", tvSeries.get(3), 1, 2),
+                        new Episode("tt4200033", tvSeries.get(3), 1, 3),
+                        new Episode("tt4200034", tvSeries.get(3), 2, 1)
+                ),
+                tvSeries.get(4),
+                List.of(
+                        new Episode("tt4200041", tvSeries.get(4), 1, 1),
+                        new Episode("tt4200042", tvSeries.get(4), 1, 2),
+                        new Episode("tt4200043", tvSeries.get(4), 1, 3),
+                        new Episode("tt4200044", tvSeries.get(4), 1, 4)
+                ),
+                tvSeries.get(5),
+                List.of(
+                        new Episode("tt4200051", tvSeries.get(5), 1, 1),
+                        new Episode("tt4200052", tvSeries.get(5), 1, 2),
+                        new Episode("tt4200053", tvSeries.get(5), 1, 3),
+                        new Episode("tt4200054", tvSeries.get(5), 1, 4),
+                        new Episode("tt4200054", tvSeries.get(5), 1, 5)
+                ),
+                tvSeries.get(6),
+                List.of(
+                        new Episode("tt4200051", tvSeries.get(6), 1, 1),
+                        new Episode("tt4200052", tvSeries.get(6), 1, 2),
+                        new Episode("tt4200053", tvSeries.get(6), 1, 3),
+                        new Episode("tt4200054", tvSeries.get(6), 1, 4),
+                        new Episode("tt4200054", tvSeries.get(6), 1, 5),
+                        new Episode("tt4200054", tvSeries.get(6), 1, 6),
+                        new Episode("tt4200054", tvSeries.get(6), 1, 7),
+                        new Episode("tt4200054", tvSeries.get(6), 1, 8)
+                )
+                //TODO fill with episodes to be able to get a list of top 10 series
+        );
+    }
+
     private List<Title> getTitles() {
         return List.of(
                 new Title("tt0000001", "movie", "toto", "toto", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000002", "tvSeries", "Voice of Firestone Televues", "Voice of Firestone Televues", false, 1943, 1947, 1, 4.8, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000003", "tvSeries", "Les Misérables", "Les misérables", false, 1934, 1934, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000004", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000002", "tvSeries", "Voice of Firestone Televues", "Voice of Firestone Televues", false, 2010, 2012, 1, 4.8, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000003", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000004", "tvSeries", "The German Weekly Review", "Die Deutsche Wochenschau", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
                 new Title("tt0000005", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
                 new Title("tt0000006", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
                 new Title("tt0000007", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
@@ -108,6 +165,7 @@ public class ImdbServiceTest {
                 new Title("tt0000010", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
                 new Title("tt0000011", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
                 new Title("tt0000012", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of())
+                //TODO complete the data with episodes
         );
     }
 

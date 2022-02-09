@@ -17,7 +17,7 @@ public class Episode {
     @Column(name = "tconst")
     private String id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_tconst")
     private Title title;
 
