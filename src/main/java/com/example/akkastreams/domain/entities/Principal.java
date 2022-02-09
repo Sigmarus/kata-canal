@@ -1,27 +1,34 @@
 package com.example.akkastreams.domain.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "principals")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Principal {
 
     @EmbeddedId
-    PrincipalKey id;
+    private PrincipalKey id;
 
     @ManyToOne
     @MapsId("titleId")
     @JoinColumn(name = "tconst")
-    Title title;
+    private Title title;
 
     @ManyToOne
     @MapsId("personId")
     @JoinColumn(name = "nconst")
-    Person person;
+    private Person person;
 
-    Integer ordering;
+    private Integer ordering;
 
-    String category;
+    private String category;
 
-    String job;
+    private String job;
 }

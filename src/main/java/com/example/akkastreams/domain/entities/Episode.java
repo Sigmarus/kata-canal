@@ -1,22 +1,29 @@
 package com.example.akkastreams.domain.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "episodes")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Episode {
 
     @Id
     @Column(name = "tconst")
-    String id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "parent_tconst")
-    Title title;
+    private Title title;
 
     @Column(name = "season_number")
-    Integer seasonNumber;
+    private Integer seasonNumber;
 
     @Column(name = "episode_number")
-    Integer episodeNumber;
+    private Integer episodeNumber;
 }

@@ -1,34 +1,41 @@
 package com.example.akkastreams.domain.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name="name_basics")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Person {
 
     @Id
     @Column(name = "nconst")
-    String id;
+    private String id;
 
     @Column(name = "primary_name")
-    String primaryName;
+    private String primaryName;
 
     @Column(name = "birth_year")
-    Integer birthYear;
+    private Integer birthYear;
 
     @Column(name = "death_year")
-    Integer deathYear;
+    private Integer deathYear;
 
     @Column(name = "primary_profession")
-    String primaryProfessions;
+    private String primaryProfessions;
 
     @ManyToMany(mappedBy = "cast", fetch = FetchType.LAZY)
-    List<Title> knownFor;
+    private List<Title> knownFor;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    List<Crew> crewIn;
+    private List<Crew> crewIn;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    List<Principal> principalIn;
+    private List<Principal> principalIn;
 }

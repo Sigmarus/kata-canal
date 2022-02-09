@@ -1,23 +1,30 @@
 package com.example.akkastreams.domain.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Crew {
 
     @EmbeddedId
-    CrewKey id;
+    private CrewKey id;
 
     @ManyToOne
     @MapsId("titleId")
     @JoinColumn(name = "tconst")
-    Title title;
+    private Title title;
 
     @ManyToOne
     @MapsId("personId")
     @JoinColumn(name = "nconst")
-    Person person;
+    private Person person;
 
     @Column(name = "type")
-    CrewType type;
+    private CrewType type;
 }

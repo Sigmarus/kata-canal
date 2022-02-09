@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class CrewKey implements Serializable {
 
     @Column(name = "tconst")
-    String titleId;
+    private String titleId;
 
     @Column(name = "nconst")
-    String personId;
+    private String personId;
 }

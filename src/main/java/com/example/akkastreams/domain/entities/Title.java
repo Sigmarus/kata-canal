@@ -1,6 +1,8 @@
 package com.example.akkastreams.domain.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,48 +10,50 @@ import java.util.List;
 @Entity
 @Table(name="title_basics")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Title {
 
     @Id
     @Column(name = "tconst")
-    String id;
+    private String id;
 
     @Column(name = "title_type")
-    String type;
+    private String type;
 
     @Column(name = "primary_title")
-    String primaryTitle;
+    private String primaryTitle;
 
     @Column(name = "original_title")
-    String originalTitle;
+    private String originalTitle;
 
     @Column(name = "is_adult")
-    Boolean isAdult = false;
+    private Boolean isAdult = false;
 
     @Column(name = "start_year")
-    Integer startYear;
+    private Integer startYear;
 
     @Column(name = "end_year")
-    Integer endYear;
+    private Integer endYear;
 
     @Column(name = "runtime_minutes")
-    Integer runtimeMinutes;
+    private Integer runtimeMinutes;
 
     @Column(name = "average_ratings")
-    Integer averageRatings;
+    private Double averageRatings;
 
     @Column(name = "num_votes")
-    Integer numVotes;
+    private Integer numVotes;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    List<Person> cast;
+    private List<Person> cast;
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
-    List<Crew> crew;
+    private List<Crew> crew;
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
-    List<Principal> principals;
+    private List<Principal> principals;
 
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
-    List<Episode> episodes;
+    private List<Episode> episodes;
 }
