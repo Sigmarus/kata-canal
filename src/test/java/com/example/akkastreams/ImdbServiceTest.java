@@ -8,13 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest
@@ -53,12 +51,11 @@ public class ImdbServiceTest {
 
     @Test
     void givenATitleWithACrew_whenFindingCrewForTheTitle_thenShouldReturnTheListPersonsInTheCrew() {
-        Person p1 = new Person("nm0000001", "Toto", 1999, null, "barber,haircutter", List.of(), List.of(), List.of());
-        Title title = getTMovies().get(0);
-        Crew crew = new Crew(new CrewKey(p1.getId(), title.getId()), title, p1, CrewType.DIRECTOR);
-        title.setCrew(List.of(crew));
+        Title title = getTitles().get(1);
 
-        List<Person> expected = title.getCrew().stream().map(Crew::getPerson).collect(Collectors.toList());
+        List<Person> expected = title.getCrew().stream()
+                .map(Crew::getPerson)
+                .collect(Collectors.toList());
 
         Mockito.when(titleRepositoryMock.findByOriginalTitle("toto"))
                 .thenReturn(Optional.of(title));
@@ -82,90 +79,142 @@ public class ImdbServiceTest {
 
     @Test
     void given10TitlesOrLessOfTypeTvSerie_whenLookingForThe10TvSeriesWithMaxNumberOfEpisodes_thenShouldReturnTheOrderedTitlesList() {
-        //TODO Not yet implemented
+        List<Title> tvSeries3 = getTvSeries().subList(0, 3);
+
+        List<Title> expected = tvSeries3.stream()
+                .sorted(Comparator.comparingInt(t -> t.getEpisodes().size()))
+                .collect(Collectors.toList());
+
+        Mockito.when(titleRepositoryMock.findAllByMaxEpisodeNumberLimit10())
+                .thenReturn(tvSeries3);
+
+        List<Title> result = imdbService.find10FirstSeriesOrderedByNumberOfEpisodes();
+
+        assertEquals(result, expected);
     }
 
     @Test
     void givenMoreThan10TitlesOfTypeTvSerie_whenLookingForThe10TvSeriesWithMaxNumberOfEpisodes_thenShouldReturnTheProperTitlesList() {
-        //TODO Not yet implemented
+        //FIXME not relevant because depends on a sql query
+        List<Title> tvSeriesAll = getTvSeries();
+
+        List<Title> expected = getTvSeries().stream()
+                .sorted((t1, t2) -> Integer.compare(t2.getEpisodes().size(), t1.getEpisodes().size()))
+                .collect(Collectors.toList());
+
+        Mockito.when(titleRepositoryMock.findAllByMaxEpisodeNumberLimit10())
+                .thenReturn(tvSeriesAll);
+
+        List<Title> result = imdbService.find10FirstSeriesOrderedByNumberOfEpisodes();
+
+        assertEquals(result, expected);
     }
 
     @Test
     void givenTitlesOfTypeTvSerieWithSameEpisodeNumber_whenLookingForThe10TvSeriesWithMaxNumberOfEpisodes_thenShouldOrderTheTitlesByAverageRatings() {
-        //TODO Not yet implemented
+        List<Title> tvSeriesAll = getTvSeries().stream().filter(t-> t.getEpisodes().size() == 4).collect(Collectors.toList());
+
+        List<Title> expected = tvSeriesAll.stream()
+                .sorted((t1, t2) -> -Double.compare(t2.getAverageRatings(), t1.getAverageRatings()))
+                .collect(Collectors.toList());
+
+        Mockito.when(titleRepositoryMock.findAllByMaxEpisodeNumberLimit10())
+                .thenReturn(tvSeriesAll);
+
+        List<Title> result = imdbService.find10FirstSeriesOrderedByNumberOfEpisodes();
+
+        assertTrue(tvSeriesAll.size() > 1);
+        assertEquals(result, expected);
     }
 
 
-    private Map<Title, List<Episode>> getEpisodes() {
-        List<Title> tvSeries = getTvSeries();
+    private Map<Integer, List<Episode>> getEpisodes() {
         return Map.of(
-                tvSeries.get(0),
+                0,
                 List.of(
-                        new Episode("tt4200001", tvSeries.get(0), 1, 1)
+                        new Episode("tt4200001", null, 1, 1)
                 ),
-                tvSeries.get(1),
+                1,
                 List.of(
-                        new Episode("tt4200011", tvSeries.get(1), 1, 1),
-                        new Episode("tt4200012", tvSeries.get(1), 1, 2)
+                        new Episode("tt4200011", null, 1, 1),
+                        new Episode("tt4200012", null, 1, 2)
                 ),
-                tvSeries.get(2),
+                2,
                 List.of(
-                        new Episode("tt4200021", tvSeries.get(2), 1, 1),
-                        new Episode("tt4200022", tvSeries.get(2), 1, 2),
-                        new Episode("tt4200023", tvSeries.get(2), 1, 3)
+                        new Episode("tt4200021", null, 1, 1),
+                        new Episode("tt4200022", null, 1, 2),
+                        new Episode("tt4200023", null, 1, 3)
                 ),
-                tvSeries.get(3),
+                3,
                 List.of(
-                        new Episode("tt4200031", tvSeries.get(3), 1, 1),
-                        new Episode("tt4200032", tvSeries.get(3), 1, 2),
-                        new Episode("tt4200033", tvSeries.get(3), 1, 3),
-                        new Episode("tt4200034", tvSeries.get(3), 2, 1)
+                        new Episode("tt4200031", null, 1, 1),
+                        new Episode("tt4200032", null, 1, 2),
+                        new Episode("tt4200033", null, 1, 3),
+                        new Episode("tt4200034", null, 2, 1)
                 ),
-                tvSeries.get(4),
+                4,
                 List.of(
-                        new Episode("tt4200041", tvSeries.get(4), 1, 1),
-                        new Episode("tt4200042", tvSeries.get(4), 1, 2),
-                        new Episode("tt4200043", tvSeries.get(4), 1, 3),
-                        new Episode("tt4200044", tvSeries.get(4), 1, 4)
+                        new Episode("tt4200041", null, 1, 1),
+                        new Episode("tt4200042", null, 1, 2),
+                        new Episode("tt4200043", null, 1, 3),
+                        new Episode("tt4200044", null, 1, 4)
                 ),
-                tvSeries.get(5),
+                5,
                 List.of(
-                        new Episode("tt4200051", tvSeries.get(5), 1, 1),
-                        new Episode("tt4200052", tvSeries.get(5), 1, 2),
-                        new Episode("tt4200053", tvSeries.get(5), 1, 3),
-                        new Episode("tt4200054", tvSeries.get(5), 1, 4),
-                        new Episode("tt4200054", tvSeries.get(5), 1, 5)
+                        new Episode("tt4200051", null, 1, 1),
+                        new Episode("tt4200052", null, 1, 2),
+                        new Episode("tt4200053", null, 1, 3),
+                        new Episode("tt4200054", null, 1, 4),
+                        new Episode("tt4200054", null, 1, 5)
                 ),
-                tvSeries.get(6),
+                6,
                 List.of(
-                        new Episode("tt4200051", tvSeries.get(6), 1, 1),
-                        new Episode("tt4200052", tvSeries.get(6), 1, 2),
-                        new Episode("tt4200053", tvSeries.get(6), 1, 3),
-                        new Episode("tt4200054", tvSeries.get(6), 1, 4),
-                        new Episode("tt4200054", tvSeries.get(6), 1, 5),
-                        new Episode("tt4200054", tvSeries.get(6), 1, 6),
-                        new Episode("tt4200054", tvSeries.get(6), 1, 7),
-                        new Episode("tt4200054", tvSeries.get(6), 1, 8)
+                        new Episode("tt4200051", null, 1, 1),
+                        new Episode("tt4200052", null, 1, 2),
+                        new Episode("tt4200053", null, 1, 3),
+                        new Episode("tt4200054", null, 1, 4),
+                        new Episode("tt4200054", null, 1, 5),
+                        new Episode("tt4200054", null, 1, 6),
+                        new Episode("tt4200054", null, 1, 7),
+                        new Episode("tt4200054", null, 1, 8)
                 )
                 //TODO fill with episodes to be able to get a list of top 10 series
         );
     }
 
-    private List<Title> getTitles() {
+    private List<Person> getPersons() {
         return List.of(
-                new Title("tt0000001", "movie", "toto", "toto", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000002", "tvSeries", "Voice of Firestone Televues", "Voice of Firestone Televues", false, 2010, 2012, 1, 4.8, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000003", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000004", "tvSeries", "The German Weekly Review", "Die Deutsche Wochenschau", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000005", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000006", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000007", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000008", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000009", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000010", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000011", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
-                new Title("tt0000012", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of())
-                //TODO complete the data with episodes
+                new Person("nm0000001", "Toto", 1999, null, "", List.of(), List.of(), List.of()),
+                new Person("nm0000002", "Tata", 1999, null, "", List.of(), List.of(), List.of())
+        );
+    }
+
+    private List<Crew> getCrew() {
+        List<Person> persons = getPersons();
+        //cannot getTitles() because of infinite cycle
+        return List.of(
+                new Crew(new CrewKey("tt0000001", persons.get(0).getId()), null, persons.get(0), CrewType.DIRECTOR),
+                new Crew(new CrewKey("tt0000001", persons.get(1).getId()), null, persons.get(1), CrewType.WRITER)
+        );
+    }
+
+    private List<Title> getTitles() {
+        Map<Integer, List<Episode>> episodes = getEpisodes();
+        return List.of(
+                new Title("tt0000000", "movie", "toto", "toto", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000001", "movie", "Bohemios", "Bohemios", false, 2010, 2012, 1, 4.5, 34, getCrew().stream().map(Crew::getPerson).collect(Collectors.toList()), List.of(), List.of(), List.of()),
+                new Title("tt0000002", "tvSeries", "Voice of Firestone Televues", "Voice of Firestone Televues", false, 2010, 2012, 1, 4.8, 34, List.of(), List.of(), List.of(), episodes.get(0)),
+                new Title("tt0000003", "tvSeries", "Les Misérables", "Les misérables", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), episodes.get(1)),
+                new Title("tt0000004", "tvSeries", "The German Weekly Review", "Die Deutsche Wochenschau", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), episodes.get(2)),
+                new Title("tt0000005", "tvSeries", "You Are an Artist", "You Are an Artist", false, 2010, 2012, 1, 3.8, 34, List.of(), List.of(), List.of(), episodes.get(3)),
+                new Title("tt0000006", "tvSeries", "Americana", "Americana", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), episodes.get(4)),
+                new Title("tt0000007", "tvSeries", "Birthday Party", "Birthday Party", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), episodes.get(5)),
+                new Title("tt0000008", "tvSeries", "The Borden Show", "The Borden Show", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), episodes.get(6)),
+                new Title("tt0000009", "tvSeries", "Kraft Theatre", "Kraft Television Theatre", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000010", "tvSeries", "Party Line", "Party Line", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000011", "tvSeries", "Public Prosecutor", "Public Prosecutor", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000012", "tvSeries", "Actor's Studio", "Actor's Studio", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of()),
+                new Title("tt0000013", "tvSeries", "The Adventures of Oky Doky", "The Adventures of Oky Doky", false, 2010, 2012, 1, 4.5, 34, List.of(), List.of(), List.of(), List.of())
         );
     }
 
